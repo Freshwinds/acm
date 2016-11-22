@@ -1,3 +1,8 @@
+#这是一道比较基础的kmp题 但是wa的原因不可描述#
+#去掉头尾 中间kmp匹配  然后判断头尾#
+#单独考虑头尾是因为头尾的长度可以大于主串对应字符的长度#
+#需要去掉头尾也就意味需要单独考虑合并后元素只有1个，2个的情况#
+
 #include<iostream>
 #include<stdio.h>
 using namespace std;
@@ -6,13 +11,14 @@ int next[maxn];//长度为i的最大前后缀。
 
 struct String
 {
-    int num;
+    long long num;
     char word;
 }str1[maxn],str2[maxn];
 void getnext(int len)
 {
     int j=0;//匹配长度
     next[0]=0;
+    next[1]=0;
     for(int i=1;i<len;i++)
     {
         while(j>0&&(str2[i].num!=str2[j].num||str2[i].word!=str2[j].word))  j=next[j];
@@ -25,10 +31,10 @@ int main()
 {
     cin>>n>>m;
     int l1=0,l2=0;
-    scanf("%d-%c",&str1[l1].num,&str1[l1].word);
+    scanf("%I64d-%c",&str1[l1].num,&str1[l1].word);
     for(int i=1;i<n;i++)
     {
-        scanf("%d-%c",&str1[i].num,&str1[i].word);
+        scanf("%I64d-%c",&str1[i].num,&str1[i].word);
         if(str1[l1].word==str1[i].word)
             str1[l1].num+=str1[i].num;
         else
@@ -38,10 +44,10 @@ int main()
             str1[l1].num=str1[i].num;
         }
     }
-    scanf("%d-%c",&str2[l2].num,&str2[l2].word);
+    scanf("%I64d-%c",&str2[l2].num,&str2[l2].word);
     for(int i=1;i<m;i++)
     {
-        scanf("%d-%c",&str2[i].num,&str2[i].word);
+        scanf("%I64d-%c",&str2[i].num,&str2[i].word);
         if(str2[l2].word==str2[i].word)
             str2[l2].num+=str2[i].num;
         else
@@ -53,7 +59,7 @@ int main()
     }
     l1++;//由于统计长度时候从0开始，故加一为实际长度
     l2++;//由于统计长度时候从0开始，故加一为实际长度
-    if(m==1)
+    if(l2==1)
     {
         long long sum=0;
         for(int i=0;i<l1;i++)
@@ -66,7 +72,7 @@ int main()
         cout<<sum<<endl;
             return 0;
     }
-    if(m==2)
+    if(l2==2)
     {
         long long sum=0;
         for(int i=0;i<l1-1;i++)
@@ -75,7 +81,6 @@ int main()
             {
                 sum++;
             }
-            
         }
         cout<<sum<<endl;
         return 0;
@@ -90,13 +95,13 @@ int main()
         str2[i-1].num=str2[i].num;
         str2[i-1].word=str2[i].word;
     }
-    l2=l2-2;                                 
+    l2=l2-2;
     getnext(l2);
     long long sum=0;
 	int j=0;
     for(int i=0;i<l1;i++)
     {
-        while(j>0&&((str2[i].num!=str2[j].num)||(str2[i].word!=str2[j].word)))  j=next[j];
+        while(j>0&&((str1[i].num!=str2[j].num)||(str1[i].word!=str2[j].word)))  j=next[j];
         if((str1[i].num==str2[j].num)&&(str1[i].word==str2[j].word))  j++;
         if(j==l2)
         {
