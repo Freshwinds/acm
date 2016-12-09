@@ -1,0 +1,107 @@
+//差之毫厘 失之千里  在转换数字成字符时  注意数字可能大于9   需要分离
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+char s1[82],s11[17][164],s0[82];
+int s2[10];
+int cnt;
+void change(char *s)
+{
+
+    for(int i=0;s[i]!='\0';i++)
+    {
+        s2[s[i]-'0']++;
+    }
+    int x=0;
+    for(int i=0;i<10;i++)
+    {
+        if(s2[i]>0&&s2[i]<=9)
+        {
+            s11[cnt][x++]=s2[i]+'0';
+            s11[cnt][x++]=i+'0';
+        }
+        else if(s2[i]>9)
+        {
+            int temp=s2[i];
+            int pos=0,p1;
+            while(temp>0)
+            {
+                temp=temp/10;
+                pos++;
+            }
+            temp=s2[i];
+            p1=pos;
+            while(temp>0)
+            {
+                s11[cnt][x+pos-1]=temp%10+'0';
+                temp/=10;
+                pos--;
+            }
+            x+=p1;
+            s11[cnt][x++]=i+'0';
+        }
+    }
+    s11[cnt][x]='\0';
+
+}
+int main()
+{
+    gets(s1);
+    strcpy(s0,s1);
+    while(s1[0]!='-')
+    {
+        cnt=1;
+        int flag=0,minx=16;
+        while(cnt<=15)
+        {
+            memset(s2,0,sizeof(s2));
+            change(s1);
+            //printf("[%s][%s]\n",s0,s11[cnt]);
+            //printf("%d\n",strcmp(s0,s11[cnt]));
+            if(cnt==1&&strcmp(s11[cnt],s0)==0)
+            {
+                printf("%s is self-inventorying\n",s0);
+                break;
+            }
+            else if(cnt>1&&strcmp(s11[cnt],s1)==0)
+            {
+                printf("%s is self-inventorying after %d steps\n",s0,cnt-1);
+                break;
+            }
+            else
+            {
+
+                for(int i=0;i<cnt;i++)
+                {
+                    if(strcmp(s11[i],s11[cnt])==0&&cnt-i>1)
+                    {
+                         /*minx=min(cnt-i,minx);*/
+                         flag=1;
+                         printf("%s enters an inventory loop of length %d\n",s0,cnt-i);
+                         break;
+
+                    }
+
+                }
+
+            }
+            if(flag==1)
+                break;
+            strcpy(s1,s11[cnt]);
+            cnt++;
+
+        }
+        /*if(flag==1)
+        {
+            printf("%s enters an inventory loop of length %d\n",s0,minx);
+        }*/
+        if(cnt==16)
+        {
+            printf("%s can not be classified after 15 iterations\n",s0);
+        }
+        gets(s1);
+        strcpy(s0,s1);
+    }
+    return 0;
+}
