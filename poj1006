@@ -1,0 +1,24 @@
+#include<stdio.h>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int main()
+{
+    int a,b,c,z;
+    int t=1;
+    scanf("%d %d %d %d",&a,&b,&c,&z);
+    while(a!=-1)
+    {
+        for(int i=z+1;i<=21252+z;i++)
+        {
+            if((i-a)%23==0&&(i-b)%28==0&&(i-c)%33==0)
+            {
+                printf("Case %d: the next triple peak occurs in %d days.\n",t,abs(i-z));
+                break;
+            }
+        }
+        t++;
+        scanf("%d %d %d %d",&a,&b,&c,&z);
+    }
+    return 0;
+}
